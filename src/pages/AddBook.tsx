@@ -1,15 +1,16 @@
 import React from "react";
 import BookForm from "../components/BookForm";
 import apiClient from "../utils/api";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const AddBook: React.FC = () => {
   const navigate = useNavigate();
+  const {id } = useParams();
   const handleSubmit = (book: { title:string, author:string, description:string }) => {
     apiClient
       .post("/books", book)
       .then(() => {
-        navigate("/");
+        navigate("/?type=Add");
       })
       .catch((error) => {
         console.error(error);
@@ -19,7 +20,7 @@ const AddBook: React.FC = () => {
     apiClient
       .put(`/books/${id}`, book)
       .then(() => {
-        navigate("/");
+        navigate("/?type=Edit");
       })
       .catch((error) => {
         console.error(error);
@@ -28,7 +29,7 @@ const AddBook: React.FC = () => {
 
   return (
     <div className="container mt-4">
-      <h1>Add a New Book</h1>
+      <h1>{`${id ? 'Edit' : 'Add a new'} Book`}</h1>
       <BookForm onSubmit={handleSubmit} onEdit={handleEdit} />
     </div>
   );
